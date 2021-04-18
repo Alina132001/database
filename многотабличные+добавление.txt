@@ -1,0 +1,165 @@
+Многотабличные
+1)
+SELECT  s.name,s.surname,h.name
+FROM student s,hobby h,student_hobby sh
+Where sh.id_student=s.id and sh.id_hobby=h.id
+
+30)
+SELECT SUBSTRING (s.name,1,1), max(h.risk),min(h.risk)
+FROM student s,student_hobby sh,hobby h
+WHERE s.id=sh.id_student and h.id=sh.id_hobby
+GROUP BY SUBSTRING(s.name,1,1)
+
+
+16)
+SELECT h.name
+FROM hobby h
+INNER JOIN(SELECT count(sh.id_student)as countofhob,sh.id_hobby
+FROM student_hobby sh
+GROUP BY sh.id_hobby)tt 
+ON tt.id_hobby=h.id
+ORDER BY tt.countofhob DESC 
+LIMIT 1
+
+2)
+select st.name,st.surname,sh.date_begin
+from student st,student_hobby sh
+where st.id=sh.id_student and sh.date_finish is null 
+order by sh.date_begin
+limit 1
+
+3)
+select st.name, st.surname, st.n_group, st.dite_birth
+from student st
+inner join (select sum(hb.risk) as Sumrisk, sh.id_student
+from student_hobby sh,hobby hb
+where hb.id = sh.id_hobby and sh.date_finish is null
+group by sh.id_student) tt
+on tt.id_student=st.id and tt.Sumrisk>9
+
+4)
+SELECT justify_days(date_finish - date_begin)
+FROM student_hobby
+
+SELECT extract(year from (justify_days(now() - dite_birth)))
+FROM student
+
+SELECT st.name, st.surname, st.n_group, st.dite_birth, tt.monthes, tt.name
+FROM student st
+INNER JOIN
+(SELECT (to_char(sh.date_finish, 'MM')::numeric(10,0) + to_char(sh.date_finish, 'YYYY')::numeric(10,0) * 12) - (to_char(sh.date_begin, 'MM')::numeric(10,0) + to_char(sh.date_begin, 'YYYY')::numeric(10,0) * 12) as monthes, sh.id_student, hb.name
+FROM student_hobby sh, hobby hb
+WHERE hb.id = sh.id) tt
+ON tt.id_student = st.id
+
+5)
+SELECT st.name, st.surname, st.n_group, st.dite_birth
+FROM student st
+INNER JOIN
+(SELECT count(sh.id_hobby), sh.id_student
+FROM student_hobby sh, hobby hb
+WHERE hb.id = sh.id_hobby
+GROUP BY sh.id_student
+HAVING count(sh.id_hobby) >1) tt
+ON tt.id_student = st.id
+WHERE 3 = ((to_char('2024-03-19'::date, 'YYYY')::int * 12 * 30 + to_char('2024-03-19'::date, 'MM')::int * 30 + to_char('2024-03-19'::date, 'DD')::int) - (to_char(st.date_birth, 'YYYY')::int * 12 * 30 + to_char(st.date_birth, 'MM')::int * 30 + to_char(st.date_birth, 'DD')::int))/ 30 / 12
+
+6)
+select avg(st.score)::real, st.n_group
+from student st
+inner join (select count(sh.id_hobby), sh.id_hobby
+from student_hobby sh, hobby hb
+where hb.id=sh.id_hobby
+group by sh.id_student
+having count(sh.id_hobby)>=1)tt
+on tt.id_student=st.id
+group by st.n_group
+
+7)
+
+select hb.name, hb.risk, extract(month from (justify_days(sh.date_finish - sh.date_begin)))
+from student_hobby sh
+inner join (select sh.id_student )
+
+SELECT hobby.name, hobby.risk, extract(month from (justify_days(student_Hobby.date_finish - student_Hobby.date_begin)))
+FROM student
+INNER JOIN student_hobby ON student_hobby.id_student = student.id
+INNER JOIN hobby ON hobby.id = student_Hobby.id_hobby
+WHERE student_hobby.id = (
+select sh.id
+from student_hobby sh
+where sh.date_finish is null
+order by sh.date_begin
+limit 1)
+group by hobby.name, hobby.risk, student_Hobby.date_finish, student_Hobby.date_begin
+
+8)
+SELECT hb.name, st.name,st.surname, st.score
+FROM student st
+INNER JOIN student_hobby sh on st.id=sh.id_student
+INNER JOIN hobby hb on hb.id=sh.id_student
+WHERE st.score>=(select max(st.score)
+from student st)
+
+9)
+
+SELECT hb.name, st.name,st.surname, st.score, st.n_group
+FROM student st
+INNER JOIN student_hobby sh on st.id=sh.id_student
+INNER JOIN hobby hb on hb.id=sh.id_student
+WHERE (st.n_group between 2000 and 3000)
+GROUP BY hb.name, st.name,st.surname, st.score,st.n_group
+HAVING (st.score between 2.6 and 3.4)
+
+
+10)
+
+WITH t AS (
+SELECT count(sh.id_student) as countofhob, sh.id_hobby, SUBSTRING(st.n_group::varchar,1,1) as course
+FROM student_hobby sh
+INNER JOIN student st ON sh.id_student = st.id
+GROUP BY SUBSTRING(st.n_group::varchar,1,1),sh.id_hobby
+)
+SELECT t.course, hobby.name
+FROM t
+INNER JOIN (
+SELECT t.course, max(countofhob) as max_c
+FROM t
+GROUP BY t.course
+) tt ON t.course = tt.course AND t.countofhob = tt.max_c
+INNER JOIN hobby ON t.id_hobby = hobby.id
+
+SELECT substring(st.n_group::varchar,1,1) as course
+FROM student st
+INNER JOIN (SELECT
+FROM student_hobby sh
+)
+on st.id=sh.id_student
+INNER JOIN hobby hb on sh.id_hobby=hb.id
+Group by course
+
+
+
+select* from student
+
+изменение/удаление/добавление
+1)DELETE FROM student
+WHERE  dite_birth is NULL
+
+10)INSERT INTO hobby (name,risk) VALUES ('Учёба',8.9)
+
+9)UPDATE hobby
+SET name ='Футбол'Where name='Бальные танцы'
+   
+3)
+DELETE FROM student
+Where id=21
+
+13)
+DELETE FROM student
+Where id=2
+2)
+UPDATE student
+set dite_birth='01-01-1999'
+where dite_birth is NULL
+
