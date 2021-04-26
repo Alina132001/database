@@ -1,0 +1,29 @@
+21)
+CREATE view studentview2
+as select id,name,surname
+FROM student ORDER BY score DESC 
+select*from studentview2		
+		
+26)
+create or replace view studentview3
+as select * from student 
+select*from studentview3
+
+34)
+Create or replace view Num_34 as
+SELECT SUBSTRING(st.surname||'##########',1,10)as surname
+From student st
+select surname from num_34
+
+35)
+Select trim(both'#'from st.surname)
+From Num_34 st
+
+36)
+select '2018-05-01'::date-'2018-04-01'::date
+
+38)
+SELECT to_char(now(), 'YYYY')::int / 100 + 1 as senctuary, now()::date - '2021-01-01'::date as days, extract(week from now()) as week
+
+37)
+SELECT ((extract(day from (now()::date))::int / 7 * 7) + 7) - (extract(day from(now()::date))::int) - 1 as daystosat
