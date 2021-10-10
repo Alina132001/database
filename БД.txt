@@ -1,0 +1,78 @@
+1)
+select "name"
+from student
+
+2)
+Select now()
+
+3)
+
+DECLARE @s int;
+DECLARE @d int;
+Set @s =5;
+Set @d=2;
+Select @s+@d
+
+
+Declare @i Int;
+Set @i=2+2;
+Select @i*3
+
+4) CASE
+
+Declare @Oz Varchar(10);
+Declare @nom Int=2;
+ Set Oz=Case 
+ when @nom=2 then'неуд'
+  when @nom=3 then'удовлетворительно'
+  when @nom=4 then'хорошо'
+  when @nom=5 then'отлично'
+  else 'введённая оценка не верна'
+  End;
+  Select @Oz AS Oz
+
+4) IF
+
+ 
+Declare @i Int;
+Set @i=2;
+if @i=2
+PRINT 'неудовлетворительно';
+else 
+print 'оценка не верна';
+begin
+if @i=3
+PRINT 'удовлетворительно';
+else
+print 'оценка не верна';
+begin
+if @i=4
+PRINT 'хорошо';
+else
+print 'оценка не верна';
+begin
+if @i=5
+PRINT 'отлично';
+else
+print 'оценка не верна';
+end;
+Select @i
+
+Числа Люка
+
+DO $$
+DECLARE L0 int; L1 int; Ln int; n int;
+BEGIN
+L0:=7;
+L1:=2;
+n:= 9;
+WHILE (n!=0)
+LOOP
+RAISE NOTICE '%',L0;
+Ln := L0 + L1;
+L0:=L1;
+L1=Ln;
+n:=n-1;
+END LOOP;
+END;
+$$
